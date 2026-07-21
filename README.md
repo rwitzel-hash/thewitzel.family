@@ -7,7 +7,11 @@ A fun landing page for [thewitzel.family](https://thewitzel.family) — the fami
 | Space | URL | Status |
 |-------|-----|--------|
 | Ride | [ride.thewitzel.family](https://ride.thewitzel.family) | Live |
-| Schedule, Heidi, Gabby, Paul, Vee, Alysha, Gardening | — | Coming soon |
+| Paul | [paul.thewitzel.family](https://paul.thewitzel.family) | Placeholder |
+| Vee | [vee.thewitzel.family](https://vee.thewitzel.family) | Placeholder |
+| Gabby | [gabby.thewitzel.family](https://gabby.thewitzel.family) | Placeholder |
+| Heidi | [heidi.thewitzel.family](https://heidi.thewitzel.family) | Placeholder |
+| Schedule, Alysha, Gardening | — | Coming soon |
 
 ## Development
 
@@ -17,6 +21,17 @@ npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000).
+
+Member placeholder sites (also available at subdomains after deploy):
+
+| Person | Local path |
+|--------|------------|
+| Paul | [/sites/paul](http://localhost:3000/sites/paul) |
+| Vee | [/sites/vee](http://localhost:3000/sites/vee) |
+| Gabby | [/sites/gabby](http://localhost:3000/sites/gabby) |
+| Heidi | [/sites/heidi](http://localhost:3000/sites/heidi) |
+
+After deploy, add each subdomain in **Vercel → thewitzel.family → Settings → Domains**, then run `cd cloudflare && ./setup.sh` to create proxied DNS records.
 
 ## Deploy
 

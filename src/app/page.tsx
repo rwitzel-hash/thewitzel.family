@@ -50,7 +50,7 @@ export default function Home() {
             <div>
               <h2 className="text-2xl font-bold text-white">Explore</h2>
               <p className="mt-1 text-white/60">
-                More spaces opening soon — stay tuned!
+                Family spaces — more opening soon!
               </p>
             </div>
             <div className="hidden h-px flex-1 bg-gradient-to-r from-white/20 to-transparent sm:block" />

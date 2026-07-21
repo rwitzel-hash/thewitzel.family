@@ -112,6 +112,10 @@ These should already exist (no change needed if already set):
 | `thewitzel.family` | thewitzel.family |
 | `www.thewitzel.family` | thewitzel.family |
 | `ride.thewitzel.family` | ride-wall |
+| `paul.thewitzel.family` | thewitzel.family |
+| `vee.thewitzel.family` | thewitzel.family |
+| `gabby.thewitzel.family` | thewitzel.family |
+| `heidi.thewitzel.family` | thewitzel.family |
 
 ### 3. Test
 

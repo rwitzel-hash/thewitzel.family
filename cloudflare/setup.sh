@@ -6,8 +6,10 @@ ENV_FILE="${ROOT}/.env"
 EMAILS_FILE="${ROOT}/family-emails.txt"
 
 if [[ -f "$ENV_FILE" ]]; then
+  set -a
   # shellcheck disable=SC1090
   source "$ENV_FILE"
+  set +a
 fi
 
 : "${CLOUDFLARE_API_TOKEN:?Set CLOUDFLARE_API_TOKEN in cloudflare/.env}"
@@ -141,6 +143,9 @@ echo "==> Configuring proxied DNS records for Vercel"
 upsert_dns "${DOMAIN}" "${VERCEL_CNAME}"
 upsert_dns "www.${DOMAIN}" "${VERCEL_CNAME}"
 upsert_dns "ride.${DOMAIN}" "${VERCEL_CNAME}"
+for member in paul vee gabby heidi; do
+  upsert_dns "${member}.${DOMAIN}" "${VERCEL_CNAME}"
+done
 
 echo "==> Setting SSL mode to Full (strict)"
 cf_api PATCH "/zones/${ZONE_ID}/settings/ssl" '{"value":"strict"}' >/dev/null
@@ -171,6 +176,34 @@ PY
 )" | json_result_id)"
 else
   echo "    Google IdP already exists: ${GOOGLE_IDP_ID}"
+fi
+
+AZURE_IDP_ID="$(echo "$IDP_JSON" | python3 -c "
+import json, sys
+for p in json.load(sys.stdin).get('result', []):
+    if p.get('type') == 'azureAD':
+        print(p['id'])
+        break
+")"
+
+ALLOWED_IDPS_JSON="$(python3 - <<PY
+import json
+idps = ["${GOOGLE_IDP_ID}"]
+if "${AZURE_IDP_ID}":
+    idps.append("${AZURE_IDP_ID}")
+print(json.dumps(idps))
+PY
+)"
+
+AUTO_REDIRECT_TO_IDENTITY="$(python3 - <<PY
+import json
+idps = json.loads('${ALLOWED_IDPS_JSON}')
+print("true" if len(idps) == 1 else "false")
+PY
+)"
+
+if [[ -n "$AZURE_IDP_ID" ]]; then
+  echo "    Azure AD IdP found: ${AZURE_IDP_ID}"
 fi
 
 if [[ ! -f "$EMAILS_FILE" ]]; then
@@ -218,8 +251,8 @@ print(json.dumps({
   "domain": "${app_domain}",
   "type": "self_hosted",
   "session_duration": "168h",
-  "auto_redirect_to_identity": True,
-  "allowed_idps": ["${GOOGLE_IDP_ID}"],
+  "auto_redirect_to_identity": ${AUTO_REDIRECT_TO_IDENTITY},
+  "allowed_idps": ${ALLOWED_IDPS_JSON},
   "policies": [{
     "name": "Witzel family",
     "decision": "allow",

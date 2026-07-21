@@ -1,7 +1,7 @@
-# One allowed Google account email per line.
-# Copy this file to family-emails.txt and add your family's Gmail addresses.
+# Allowed sign-in emails — one address per line (Google or Microsoft, once configured)
+# Copy to family-emails.txt and add your family's addresses.
 #
 # Example:
 # ryan@gmail.com
 # heidi@gmail.com
-# gabby@gmail.com
+# child@outlook.com
