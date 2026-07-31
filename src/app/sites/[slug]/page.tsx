@@ -4,6 +4,8 @@ import { SiteSections } from "@/components/site/SiteSections";
 import { SiteShell } from "@/components/site/SiteShell";
 import { siteSlugs, sitesBySlug } from "@/data/sites";
 
+export const revalidate = 1800;
+
 type SitePageProps = {
   params: Promise<{ slug: string }>;
 };

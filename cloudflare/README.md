@@ -138,8 +138,11 @@ Cloudflare Verified Proxy for Vercel is automatic when using Cloudflare's orange
 ## Adding a new subdomain later
 
 1. Add the subdomain in Vercel (project settings → Domains)
-2. Add a proxied CNAME in Cloudflare DNS: `newapp.thewitzel.family` → `cname.vercel-dns.com`
+2. Add a proxied CNAME in Cloudflare DNS: `newapp.thewitzel.family` → `0fe9a2c119302701.vercel-dns-017.com`
+   (Use the exact CNAME shown in Vercel → Project → Domains → View DNS configuration.)
 3. Access on `*.thewitzel.family` covers it automatically — no new auth setup
+
+> **Note:** With Cloudflare proxy (orange cloud) enabled for Access, Vercel may show **Invalid Configuration**. That is expected — Vercel sees Cloudflare IPs instead of its own. Keep the proxy on so Access works; ignore the Vercel warning.
 
 ## Adding a family member
 
@@ -152,6 +155,7 @@ Edit `family-emails.txt` and re-run `./setup.sh`.
 | Site still public, no login | Nameservers not switched to Cloudflare yet, or DNS not proxied (orange cloud) |
 | 403 from Vercel after switching | Confirm SSL mode is **Full (strict)** in Cloudflare |
 | Google login fails | Check OAuth redirect URI matches Cloudflare callback exactly |
+| Vercel shows Invalid Configuration | Expected with Cloudflare **proxy on** (needed for Access). DNS is correct; Vercel just can't see its own IPs through the proxy. Do **not** switch to DNS-only or Access breaks. |
 | `ride.thewitzel.family` not protected | Ensure DNS record exists and is **proxied** in Cloudflare |
 | Too many redirects | SSL mode should be Full (strict), not Flexible |
 
@@ -160,7 +164,7 @@ Edit `family-emails.txt` and re-run `./setup.sh`.
 If you prefer the UI over the script:
 
 1. **Cloudflare** → Add site → `thewitzel.family`
-2. **DNS** → CNAME `@`, `www`, `ride` → `cname.vercel-dns.com` (proxied)
+2. **DNS** → proxied A records for `@`, `www`, `ride`, and member subdomains → `76.76.21.21`
 3. **SSL/TLS** → Full (strict)
 4. **Zero Trust** → Access → Applications → Add `thewitzel.family` and `*.thewitzel.family`
 5. **Policy** → Allow → Emails → add family addresses

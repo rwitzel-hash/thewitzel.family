@@ -4,6 +4,11 @@ export type PlaceholderItem = {
   badge?: string;
 };
 
+export type GoogleCalendarEmbed = {
+  name: string;
+  embedSrc: string;
+};
+
 export type SiteSection =
   | {
       type: "movies";
@@ -23,6 +28,9 @@ export type SiteSection =
       title: string;
       location: string;
       description: string;
+      latitude?: number;
+      longitude?: number;
+      timezone?: string;
     }
   | {
       type: "facts";
@@ -36,6 +44,29 @@ export type SiteSection =
       title: string;
       description: string;
       integrationNote: string;
+    }
+  | {
+      type: "google-calendars";
+      title: string;
+      description: string;
+      calendars: GoogleCalendarEmbed[];
+    }
+  | {
+      type: "lunch";
+      title: string;
+      description: string;
+      district: string;
+      school: string;
+      menuType: string;
+      sourceUrl: string;
+    }
+  | {
+      type: "link";
+      title: string;
+      description: string;
+      href: string;
+      cta: string;
+      location?: string;
     };
 
 export type SiteConfig = {

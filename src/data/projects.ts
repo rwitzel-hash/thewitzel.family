@@ -24,7 +24,7 @@ export const projects: Project[] = [
   },
   {
     name: "Heidi",
-    description: "Weather, science & cat facts, plus your week ahead.",
+    description: "Weather, lunch, Lone Peak calendar, and family events.",
     href: "https://heidi.thewitzel.family",
     emoji: "✨",
     gradient: "from-pink-400 via-rose-500 to-red-400",

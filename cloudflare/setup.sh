@@ -18,7 +18,12 @@ fi
 : "${GOOGLE_CLIENT_SECRET:?Set GOOGLE_CLIENT_SECRET in cloudflare/.env}"
 
 DOMAIN="${DOMAIN:-thewitzel.family}"
-VERCEL_CNAME="cname.vercel-dns.com"
+# Project-specific CNAME from Vercel Domains UI (subdomains). Apex uses VERCEL_IP.
+VERCEL_CNAME="${VERCEL_CNAME:-0fe9a2c119302701.vercel-dns-017.com}"
+VERCEL_IP="${VERCEL_IP:-76.76.21.21}"
+# Keep orange-cloud proxy on so Cloudflare Access works. Vercel may show
+# "Invalid Configuration" while proxied — that is expected and safe to ignore.
+PROXY_DNS="${PROXY_DNS:-true}"
 API="https://api.cloudflare.com/client/v4"
 
 cf_api() {
@@ -96,14 +101,18 @@ echo
 
 upsert_dns() {
   local name="$1"
-  local target="$2"
-  python3 - <<PY
+  local record_type="$2"
+  local target="$3"
+  PROXY_DNS="$PROXY_DNS" RECORD_TYPE="$record_type" python3 - <<PY
 import json, os, urllib.request
 
 token = os.environ["CLOUDFLARE_API_TOKEN"]
 zone_id = os.environ["ZONE_ID"]
 name = "${name}"
 target = "${target}"
+record_type = os.environ["RECORD_TYPE"]
+proxied = os.environ.get("PROXY_DNS", "true").lower() in ("1", "true", "yes")
+ttl = 1 if proxied else 300
 api = "https://api.cloudflare.com/client/v4"
 
 def call(method, path, data=None):
@@ -117,34 +126,46 @@ def call(method, path, data=None):
         return json.load(resp)
 
 records = call("GET", f"/zones/{zone_id}/dns_records?name={name}")["result"]
-cname = next((r for r in records if r["type"] == "CNAME"), None)
+match = next(
+    (
+        r for r in records
+        if r["type"] == record_type
+        and r.get("content", "").rstrip(".") == target.rstrip(".")
+        and bool(r.get("proxied")) == proxied
+    ),
+    None,
+)
 
-if cname and cname.get("content") == target and cname.get("proxied"):
-    print(f"    DNS {name} already points to {target} (proxied)")
+mode = "proxied" if proxied else "DNS-only"
+if match:
+    print(f"    DNS {name} already points to {target} ({mode})")
 else:
     for r in records:
-        if r["type"] in ("A", "AAAA", "CNAME") and (cname is None or r["id"] != cname["id"]):
+        if r["type"] in ("A", "AAAA", "CNAME"):
             call("DELETE", f"/zones/{zone_id}/dns_records/{r['id']}")
             print(f"    Removed conflicting {r['type']} record for {name}")
 
-    payload = {"type": "CNAME", "name": name, "content": target, "proxied": True, "ttl": 1}
-    if cname:
-        call("PUT", f"/zones/{zone_id}/dns_records/{cname['id']}", payload)
-        print(f"    Updated DNS {name} -> {target} (proxied)")
-    else:
-        call("POST", f"/zones/{zone_id}/dns_records", payload)
-        print(f"    Created DNS {name} -> {target} (proxied)")
+    payload = {
+        "type": record_type,
+        "name": name,
+        "content": target,
+        "proxied": proxied,
+        "ttl": ttl,
+    }
+    call("POST", f"/zones/{zone_id}/dns_records", payload)
+    print(f"    Created {record_type} {name} -> {target} ({mode})")
 PY
 }
 
 export ZONE_ID
+export PROXY_DNS
 
-echo "==> Configuring proxied DNS records for Vercel"
-upsert_dns "${DOMAIN}" "${VERCEL_CNAME}"
-upsert_dns "www.${DOMAIN}" "${VERCEL_CNAME}"
-upsert_dns "ride.${DOMAIN}" "${VERCEL_CNAME}"
+echo "==> Configuring DNS records for Vercel (proxy=${PROXY_DNS})"
+upsert_dns "${DOMAIN}" "A" "${VERCEL_IP}"
+upsert_dns "www.${DOMAIN}" "CNAME" "${VERCEL_CNAME}"
+upsert_dns "ride.${DOMAIN}" "A" "${VERCEL_IP}"
 for member in paul vee gabby heidi; do
-  upsert_dns "${member}.${DOMAIN}" "${VERCEL_CNAME}"
+  upsert_dns "${member}.${DOMAIN}" "CNAME" "${VERCEL_CNAME}"
 done
 
 echo "==> Setting SSL mode to Full (strict)"
@@ -198,7 +219,7 @@ PY
 AUTO_REDIRECT_TO_IDENTITY="$(python3 - <<PY
 import json
 idps = json.loads('${ALLOWED_IDPS_JSON}')
-print("true" if len(idps) == 1 else "false")
+print(repr(len(idps) == 1))
 PY
 )"
 
