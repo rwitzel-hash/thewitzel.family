@@ -47,7 +47,7 @@ export const heidiSite: SiteConfig = {
         {
           name: "Family",
           embedSrc:
-            "https://calendar.google.com/calendar/embed?src=family13066140934880891681%40group.calendar.google.com&ctz=America%2FDenver",
+            "https://calendar.google.com/calendar/embed?src=47umno8geark1o2qa3qi54fq1k%40group.calendar.google.com&ctz=America%2FDenver",
         },
       ],
     },
