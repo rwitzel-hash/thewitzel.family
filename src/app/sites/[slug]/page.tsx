@@ -49,7 +49,7 @@ export default async function SitePage({ params }: SitePageProps) {
 
   return (
     <SiteShell site={site}>
-      <SiteSections sections={site.sections} seed={seed} />
+      <SiteSections slug={slug} sections={site.sections} seed={seed} />
     </SiteShell>
   );
 }

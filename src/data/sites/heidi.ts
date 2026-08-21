@@ -5,8 +5,15 @@ export const heidiSite: SiteConfig = {
   name: "Heidi",
   emoji: "✨",
   gradient: "from-pink-400 via-rose-500 to-red-400",
-  tagline: "Weather, lunch, calendars, and a little science — all in one spot.",
+  tagline: "Lunch, announcements, reading adventures, and your week ahead.",
   sections: [
+    {
+      type: "reading",
+      title: "Reading tracker",
+      description:
+        "Tap how many minutes you read. Add a book name if you want — then check your fun stats!",
+      tone: "younger",
+    },
     {
       type: "weather",
       title: "Draper weather",
@@ -22,8 +29,15 @@ export const heidiSite: SiteConfig = {
       description: "This week’s menu from Canyons School District / Nutrislice.",
       district: "canyonsdistrict",
       school: "lone-peak-elementary",
-      menuType: "lunch",
+      menuType: "lunch-2",
       sourceUrl: "https://canyonsdistrict.nutrislice.com/menu/lone-peak-elementary",
+    },
+    {
+      type: "announcements",
+      title: "School announcements",
+      description: "Latest news from Lone Peak Elementary.",
+      apiBase: "https://lonepeak.canyonsdistrict.org",
+      sourceUrl: "https://lonepeak.canyonsdistrict.org/",
     },
     {
       type: "link",

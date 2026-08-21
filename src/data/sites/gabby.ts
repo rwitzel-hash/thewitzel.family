@@ -5,35 +5,60 @@ export const gabbySite: SiteConfig = {
   name: "Gabby",
   emoji: "🎨",
   gradient: "from-amber-400 via-orange-500 to-red-500",
-  tagline: "Movies, Draper weather, cat facts, and your week at a glance.",
+  tagline: "Reading goals, lunch, school news, weather, and your week.",
   sections: [
     {
-      type: "movies",
-      title: "Upcoming kids movies",
-      description: "Family-friendly films and animated releases — ratings and times coming soon.",
-      items: [
-        {
-          title: "Animated adventures",
-          subtitle: "New releases perfect for the whole crew.",
-          badge: "Placeholder",
-        },
-        {
-          title: "Matinee & discount days",
-          subtitle: "Local theater deals around Draper.",
-          badge: "Coming soon",
-        },
-        {
-          title: "Watchlist votes",
-          subtitle: "Pick the next family movie night.",
-          badge: "Coming soon",
-        },
-      ],
+      type: "reading",
+      title: "Reading log",
+      description:
+        "Quick-add minutes (and an optional book title). Watch your weekly stats stack up.",
+      tone: "older",
     },
     {
       type: "weather",
       title: "Draper weather",
       location: "Draper, Utah",
-      description: "Live forecast and daily highs — weather API hookup coming soon.",
+      description: "Live forecast for today and the next few days.",
+      latitude: 40.5244,
+      longitude: -111.8638,
+      timezone: "America/Denver",
+    },
+    {
+      type: "lunch",
+      title: "Lone Peak lunch",
+      description: "This week’s menu from Canyons School District / Nutrislice.",
+      district: "canyonsdistrict",
+      school: "lone-peak-elementary",
+      menuType: "lunch-2",
+      sourceUrl: "https://canyonsdistrict.nutrislice.com/menu/lone-peak-elementary",
+    },
+    {
+      type: "announcements",
+      title: "School announcements",
+      description: "Latest news from Lone Peak Elementary.",
+      apiBase: "https://lonepeak.canyonsdistrict.org",
+      sourceUrl: "https://lonepeak.canyonsdistrict.org/",
+    },
+    {
+      type: "link",
+      title: "Lone Peak school calendar",
+      description:
+        "Early outs, holidays, conferences, and school events.",
+      location: "Lone Peak Elementary · Canyons School District",
+      href: "https://lonepeak.canyonsdistrict.org/calendar/",
+      cta: "Open school calendar",
+    },
+    {
+      type: "google-calendars",
+      title: "Family calendar",
+      description: "Shared family events for the week.",
+      calendars: [
+        {
+          name: "Family",
+          embedSrc:
+            "https://calendar.google.com/calendar/embed?src=47umno8geark1o2qa3qi54fq1k%40group.calendar.google.com&ctz=America%2FDenver",
+        },
+      ],
     },
     {
       type: "facts",
@@ -49,13 +74,11 @@ export const gabbySite: SiteConfig = {
         "The average cat can jump up to six times its body length.",
         "A cat's purr vibrates between 25 and 150 hertz — a soothing frequency.",
         "Ancient Egyptians revered cats and often depicted them in art.",
+        "Cats have 32 muscles in each ear.",
+        "A cat can run about 30 mph in short bursts.",
+        "Cats prefer drinking moving water — faucet fans unite.",
+        "Most cats are lactose intolerant, even if they beg for milk.",
       ],
-    },
-    {
-      type: "calendar",
-      title: "This week",
-      description: "Your upcoming week in calendar view.",
-      integrationNote: "Google Calendar integration coming soon — events will sync here automatically.",
     },
   ],
 };

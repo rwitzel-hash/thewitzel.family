@@ -27,10 +27,9 @@ export function LunchCard({
   sourceUrl,
   menu,
 }: LunchCardProps) {
-  const schoolDays =
-    menu?.days.filter((day) => !isWeekend(day.date) && day.items.length > 0) ??
-    [];
   const weekdays = menu?.days.filter((day) => !isWeekend(day.date)) ?? [];
+  const schoolDays = weekdays.filter((day) => day.items.length > 0);
+  const today = weekdays.find((day) => day.isToday);
 
   return (
     <SectionCard title={title} description={description}>
@@ -49,8 +48,7 @@ export function LunchCard({
       ) : schoolDays.length === 0 ? (
         <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
           <p className="text-sm leading-relaxed text-white/70">
-            No lunch items published for this week yet — menus often appear
-            closer to the school year / after summer break.
+            No lunch items published for this week yet.
           </p>
           <a
             href={sourceUrl}
@@ -62,28 +60,55 @@ export function LunchCard({
           </a>
         </div>
       ) : (
-        <div className="space-y-3">
-          {weekdays.map((day) => (
-            <div
-              key={day.date}
-              className="rounded-2xl border border-white/10 bg-white/5 p-4"
-            >
-              <p className="text-sm font-semibold text-white">
-                {formatDay(day.date)}
+        <div className="space-y-4">
+          {today?.items.length ? (
+            <div className="rounded-2xl border border-rose-300/30 bg-rose-500/15 p-4">
+              <p className="text-xs font-semibold uppercase tracking-widest text-rose-100/80">
+                Today · {formatDay(today.date)}
               </p>
-              {day.items.length === 0 ? (
-                <p className="mt-2 text-sm text-white/45">No menu posted</p>
-              ) : (
-                <ul className="mt-2 space-y-1">
-                  {day.items.map((item) => (
-                    <li key={item} className="text-sm text-white/75">
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              )}
+              <ul className="mt-2 space-y-1">
+                {today.items.map((item) => (
+                  <li key={item} className="text-sm font-medium text-white">
+                    {item}
+                  </li>
+                ))}
+              </ul>
             </div>
-          ))}
+          ) : null}
+
+          <div className="space-y-3">
+            {weekdays.map((day) => (
+              <div
+                key={day.date}
+                className={`rounded-2xl border p-4 ${
+                  day.isToday
+                    ? "border-white/20 bg-white/10"
+                    : "border-white/10 bg-white/5"
+                }`}
+              >
+                <p className="text-sm font-semibold text-white">
+                  {formatDay(day.date)}
+                  {day.isToday ? (
+                    <span className="ml-2 text-xs font-semibold uppercase tracking-wide text-rose-200">
+                      Today
+                    </span>
+                  ) : null}
+                </p>
+                {day.items.length === 0 ? (
+                  <p className="mt-2 text-sm text-white/45">No menu posted</p>
+                ) : (
+                  <ul className="mt-2 space-y-1">
+                    {day.items.map((item) => (
+                      <li key={item} className="text-sm text-white/75">
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            ))}
+          </div>
+
           <a
             href={sourceUrl}
             target="_blank"

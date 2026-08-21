@@ -61,6 +61,20 @@ export type SiteSection =
       sourceUrl: string;
     }
   | {
+      type: "announcements";
+      title: string;
+      description: string;
+      apiBase: string;
+      sourceUrl: string;
+      categoryIds?: number[];
+    }
+  | {
+      type: "reading";
+      title: string;
+      description: string;
+      tone: "younger" | "older";
+    }
+  | {
       type: "link";
       title: string;
       description: string;

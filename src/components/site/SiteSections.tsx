@@ -1,13 +1,16 @@
+import { AnnouncementsCard } from "./AnnouncementsCard";
 import { FactCard } from "./FactCard";
 import { GoogleCalendars } from "./GoogleCalendars";
 import { LinkCard } from "./LinkCard";
 import { LunchCard } from "./LunchCard";
 import { PlaceholderList } from "./PlaceholderList";
+import { ReadingTracker } from "./ReadingTracker";
 import { SectionCard } from "./SectionCard";
 import { WeatherCard } from "./WeatherCard";
 import { WeatherPlaceholder } from "./WeatherPlaceholder";
 import { WeekCalendarPlaceholder } from "./WeekCalendarPlaceholder";
 import type { SiteSection } from "@/data/sites/types";
+import { getSchoolAnnouncements } from "@/lib/announcements";
 import { getLunchWeek } from "@/lib/lunch";
 import { getWeatherForecast } from "@/lib/weather";
 
@@ -20,11 +23,16 @@ function pickFact(facts: string[], seed: string): string {
 }
 
 type SiteSectionsProps = {
+  slug: string;
   sections: SiteSection[];
   seed: string;
 };
 
-export async function SiteSections({ sections, seed }: SiteSectionsProps) {
+export async function SiteSections({
+  slug,
+  sections,
+  seed,
+}: SiteSectionsProps) {
   return (
     <>
       {await Promise.all(
@@ -123,6 +131,34 @@ export async function SiteSections({ sections, seed }: SiteSectionsProps) {
                 description={section.description}
                 sourceUrl={section.sourceUrl}
                 menu={menu}
+              />
+            );
+          }
+
+          if (section.type === "announcements") {
+            const announcements = await getSchoolAnnouncements({
+              apiBase: section.apiBase,
+              categoryIds: section.categoryIds,
+            });
+            return (
+              <AnnouncementsCard
+                key={key}
+                title={section.title}
+                description={section.description}
+                sourceUrl={section.sourceUrl}
+                announcements={announcements}
+              />
+            );
+          }
+
+          if (section.type === "reading") {
+            return (
+              <ReadingTracker
+                key={key}
+                slug={slug}
+                title={section.title}
+                description={section.description}
+                tone={section.tone}
               />
             );
           }

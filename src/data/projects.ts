@@ -24,14 +24,14 @@ export const projects: Project[] = [
   },
   {
     name: "Heidi",
-    description: "Weather, lunch, Lone Peak calendar, and family events.",
+    description: "Lunch, school news, reading tracker, and calendars.",
     href: "https://heidi.thewitzel.family",
     emoji: "✨",
     gradient: "from-pink-400 via-rose-500 to-red-400",
   },
   {
     name: "Gabby",
-    description: "Kids movies, Draper weather, cat facts, and calendar.",
+    description: "Reading log, lunch, school news, weather, and calendar.",
     href: "https://gabby.thewitzel.family",
     emoji: "🎨",
     gradient: "from-amber-400 via-orange-500 to-red-500",
