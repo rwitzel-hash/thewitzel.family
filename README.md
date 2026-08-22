@@ -22,6 +22,17 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
+### Live feeds (no API keys)
+
+Member site sections pull from public, keyless sources and fall back to empty lists if a fetch fails:
+
+| Section | Source | Notes |
+|---------|--------|--------|
+| Paul — upcoming movies | Wikipedia MediaWiki API (`List of American films of YYYY`) | Community-edited US release schedule; dates can shift; includes some streaming titles |
+| Paul — U of U events | Trumba JSON | Already keyless |
+| Vee — DC events | [loc.gov](https://www.loc.gov/events/?fo=json) events JSON | Library of Congress programming (not a full citywide calendar) |
+| Vee — GW events | Localist API | Already keyless |
+
 Member placeholder sites (also available at subdomains after deploy):
 
 | Person | Local path |

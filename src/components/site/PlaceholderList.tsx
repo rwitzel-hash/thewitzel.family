@@ -2,16 +2,25 @@ import type { PlaceholderItem } from "@/data/sites/types";
 
 type PlaceholderListProps = {
   items: PlaceholderItem[];
+  emptyMessage?: string;
 };
 
-export function PlaceholderList({ items }: PlaceholderListProps) {
+export function PlaceholderList({
+  items,
+  emptyMessage = "Nothing loaded right now. Check back soon.",
+}: PlaceholderListProps) {
+  if (items.length === 0) {
+    return (
+      <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
+        <p className="text-sm text-white/65">{emptyMessage}</p>
+      </div>
+    );
+  }
+
   return (
     <ul className="space-y-3">
-      {items.map((item) => (
-        <li
-          key={item.title}
-          className="rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-sm"
-        >
+      {items.map((item) => {
+        const body = (
           <div className="flex items-start justify-between gap-3">
             <div>
               <h3 className="font-semibold text-white">{item.title}</h3>
@@ -25,8 +34,27 @@ export function PlaceholderList({ items }: PlaceholderListProps) {
               </span>
             )}
           </div>
-        </li>
-      ))}
+        );
+
+        return (
+          <li key={`${item.title}-${item.subtitle ?? ""}-${item.href ?? ""}`}>
+            {item.href ? (
+              <a
+                href={item.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block rounded-2xl border border-white/10 bg-white/5 p-4 transition hover:bg-white/10"
+              >
+                {body}
+              </a>
+            ) : (
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-sm">
+                {body}
+              </div>
+            )}
+          </li>
+        );
+      })}
     </ul>
   );
 }

@@ -11,7 +11,13 @@ import { WeatherPlaceholder } from "./WeatherPlaceholder";
 import { WeekCalendarPlaceholder } from "./WeekCalendarPlaceholder";
 import type { SiteSection } from "@/data/sites/types";
 import { getSchoolAnnouncements } from "@/lib/announcements";
+import {
+  getLocalistEvents,
+  getLocEvents,
+  getTrumbaEvents,
+} from "@/lib/events";
 import { getLunchWeek } from "@/lib/lunch";
+import { getUpcomingMovies } from "@/lib/movies";
 import { getWeatherForecast } from "@/lib/weather";
 
 function pickFact(facts: string[], seed: string): string {
@@ -40,18 +46,36 @@ export async function SiteSections({
           const key = `${section.type}-${section.title}-${index}`;
 
           if (section.type === "movies") {
+            const movies = await getUpcomingMovies({
+              region: section.region,
+              limit: section.limit,
+            });
             return (
               <SectionCard
                 key={key}
                 title={section.title}
                 description={section.description}
               >
-                <PlaceholderList items={section.items} />
+                <PlaceholderList
+                  items={movies}
+                  emptyMessage="No upcoming movies loaded right now."
+                />
               </SectionCard>
             );
           }
 
           if (section.type === "events") {
+            const days = section.days ?? 21;
+            const limit = section.limit ?? 10;
+            const events =
+              section.source === "trumba" && section.feedUrl
+                ? await getTrumbaEvents(section.feedUrl, days, limit)
+                : section.source === "localist" && section.feedUrl
+                  ? await getLocalistEvents(section.feedUrl, days, limit)
+                  : section.source === "loc"
+                    ? await getLocEvents(days, limit)
+                    : [];
+
             return (
               <SectionCard
                 key={key}
@@ -59,7 +83,10 @@ export async function SiteSections({
                 description={section.description}
                 location={section.location}
               >
-                <PlaceholderList items={section.items} />
+                <PlaceholderList
+                  items={events}
+                  emptyMessage="No events loaded right now."
+                />
               </SectionCard>
             );
           }

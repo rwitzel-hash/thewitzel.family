@@ -2,6 +2,7 @@ export type PlaceholderItem = {
   title: string;
   subtitle?: string;
   badge?: string;
+  href?: string;
 };
 
 export type GoogleCalendarEmbed = {
@@ -14,14 +15,19 @@ export type SiteSection =
       type: "movies";
       title: string;
       description: string;
-      items: PlaceholderItem[];
+      region?: string;
+      limit?: number;
     }
   | {
       type: "events";
       title: string;
       description: string;
       location: string;
-      items: PlaceholderItem[];
+      source: "trumba" | "localist" | "loc";
+      /** Trumba calendar webname, or Localist site origin (e.g. https://calendar.gwu.edu). */
+      feedUrl?: string;
+      limit?: number;
+      days?: number;
     }
   | {
       type: "weather";
