@@ -7,26 +7,13 @@ export type FamilyGame = {
 export const gamesHomeUrl = "https://games.thewitzel.family";
 
 /**
- * Used only when the games site cannot be read.
- * Family Hold'em is last on purpose: it is the newest title this list knows about.
- * A successful read of the games homepage replaces this shelf.
+ * The game the home tile calls newest.
+ * This entry is the source of truth — do not infer it from catalog order.
+ * Point it at the next title (Maple Hollow is expected soon) when that game ships.
  */
-export const fallbackGames: FamilyGame[] = [
-  {
-    name: "Family Wordle",
-    href: `${gamesHomeUrl}/games/wordle`,
-    blurb:
-      "Guess today's 5-letter word in six tries — same puzzle for the whole family.",
-  },
-  {
-    name: "Memory Match",
-    href: `${gamesHomeUrl}/games/memory`,
-    blurb: "Flip cards and find matching pairs.",
-  },
-  {
-    name: "Family Hold'em",
-    href: `${gamesHomeUrl}/games/poker`,
-    blurb:
-      "No-Limit Texas Hold'em with pretend chips — read the board, name your hand, and play the table.",
-  },
-];
+export const featuredGame: FamilyGame = {
+  name: "Family Hold'em",
+  href: `${gamesHomeUrl}/games/poker`,
+  blurb:
+    "No-Limit Texas Hold'em with pretend chips — read the board, name your hand, and play the table.",
+};

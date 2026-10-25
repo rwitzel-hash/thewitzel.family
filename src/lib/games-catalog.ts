@@ -1,4 +1,4 @@
-import { fallbackGames, gamesHomeUrl, type FamilyGame } from "@/data/games";
+import { gamesHomeUrl, type FamilyGame } from "@/data/games";
 
 const GAME_PATTERN =
   /href="(\/games\/[a-z0-9-]+)"[\s\S]{0,1200}?<h2[^>]*>([^<]{1,80})<\/h2>[\s\S]{0,500}?<p[^>]*>([^<]{0,280})<\/p>/gi;
@@ -42,9 +42,12 @@ export function parseGamesCatalog(html: string): FamilyGame[] {
   return games;
 }
 
-/** Public catalog from the games homepage. Falls back to the local shelf. */
-export async function getGamesCatalog(): Promise<{
-  games: FamilyGame[];
+/**
+ * How many games the public homepage lists.
+ * Order is not meaningful — the featured title lives in src/data/games.ts.
+ */
+export async function getGamesCatalogCount(): Promise<{
+  total: number;
   live: boolean;
 }> {
   try {
@@ -53,12 +56,12 @@ export async function getGamesCatalog(): Promise<{
       next: { revalidate: 3600 },
       signal: AbortSignal.timeout(5000),
     });
-    if (!response.ok) return { games: fallbackGames, live: false };
+    if (!response.ok) return { total: 0, live: false };
 
-    const games = parseGamesCatalog(await response.text());
-    if (games.length === 0) return { games: fallbackGames, live: false };
-    return { games, live: true };
+    const total = parseGamesCatalog(await response.text()).length;
+    if (total === 0) return { total: 0, live: false };
+    return { total, live: true };
   } catch {
-    return { games: fallbackGames, live: false };
+    return { total: 0, live: false };
   }
 }

@@ -10,7 +10,8 @@ import {
   getTrumbaEvents,
   type EventItem,
 } from "@/lib/events";
-import { getGamesCatalog } from "@/lib/games-catalog";
+import { featuredGame } from "@/data/games";
+import { getGamesCatalogCount } from "@/lib/games-catalog";
 import { getLunchWeek } from "@/lib/lunch";
 import { getUpcomingMovies, type MovieItem } from "@/lib/movies";
 import { getWeatherForecast, type WeatherForecast } from "@/lib/weather";
@@ -103,7 +104,7 @@ export async function getHomeData(): Promise<HomeDashboardData> {
         longitude: weatherSection?.longitude ?? -111.8638,
         timezone: weatherSection?.timezone ?? "America/Denver",
       }),
-      getGamesCatalog(),
+      getGamesCatalogCount(),
       getUpcomingMovies({ limit: 1 }),
       paulEvents?.feedUrl
         ? getTrumbaEvents(paulEvents.feedUrl, paulEvents.days ?? 21, 1)
@@ -135,7 +136,6 @@ export async function getHomeData(): Promise<HomeDashboardData> {
         : Promise.resolve(null),
     ]);
 
-  const newest = catalog.games[catalog.games.length - 1];
   const notes: HomeDashboardData["notes"] = {};
 
   const paulNote =
@@ -178,10 +178,10 @@ export async function getHomeData(): Promise<HomeDashboardData> {
   return {
     weather,
     games: {
-      total: catalog.games.length,
-      newestName: newest?.name ?? "Family games",
-      newestBlurb: newest?.blurb ?? "Pick a game and play.",
-      newestHref: newest?.href ?? "https://games.thewitzel.family",
+      total: catalog.total,
+      newestName: featuredGame.name,
+      newestBlurb: featuredGame.blurb,
+      newestHref: featuredGame.href,
       live: catalog.live,
     },
     notes,
