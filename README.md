@@ -1,6 +1,6 @@
 # The Witzel Family
 
-The family home for [thewitzel.family](https://thewitzel.family). The apex page is a live bento dashboard over a painting of the Bear Canyon Suspension Bridge. Weather is Open-Meteo for Draper. The games tile features the title in `src/data/games.ts` (Family Hold'em) and, when the public catalog can be read, shows how many games are on [games.thewitzel.family](https://games.thewitzel.family). Catalog order is not treated as newest. Ride Wall sits behind Cloudflare Access and does not expose a keyless feed, so the Ride tile links through without live mileage.
+The family home for [thewitzel.family](https://thewitzel.family). The apex page is a live bento dashboard over a painting of the Bear Canyon Suspension Bridge. Weather is Open-Meteo for Draper. The games tile features the title in `src/data/games.ts` (Maple Hollow) and, when the public catalog can be read, shows how many games are on [games.thewitzel.family](https://games.thewitzel.family). Catalog order is not treated as newest. Ride Wall sits behind Cloudflare Access and does not expose a keyless feed, so the Ride tile links through without live mileage.
 
 ## Projects
 
