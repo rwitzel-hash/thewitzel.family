@@ -41,7 +41,11 @@ export default async function Home() {
     <HomeStage className={geist.className}>
       <BridgeBackground />
       <main className="relative z-10 mx-auto w-full max-w-[1500px] px-4 py-6 sm:px-6 sm:py-10 lg:px-10 xl:max-w-[1680px] 2xl:max-w-[1840px] 2xl:py-14">
-        <header className="mb-6 flex items-start justify-between gap-4 sm:mb-8">
+        <header className="relative mb-6 flex items-start justify-between gap-4 sm:mb-8">
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute -inset-x-3 -top-3 bottom-0 -z-10 rounded-[28px] bg-gradient-to-r from-black/70 via-black/45 to-transparent"
+          />
           <div>
             <h1 className="home-title text-[clamp(2.5rem,6vw,5.4rem)] font-semibold leading-[0.92] tracking-[-0.045em] text-white">
               The Witzel Family

@@ -14,7 +14,7 @@ export function BridgeBackground() {
             placeholder="blur"
             quality={70}
             sizes="100vw"
-            className="bridge-photo object-cover object-[50%_48%] max-sm:object-[50%_54%]"
+            className="bridge-photo object-cover object-[50%_46%]"
           />
         </div>
       </div>
