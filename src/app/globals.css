@@ -1,44 +1,129 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0f0c29;
+  --background: #071018;
   --foreground: #ffffff;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-nunito);
-  --font-display: var(--font-fredoka);
+  --font-sans: var(--font-nunito), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-fredoka), ui-sans-serif, system-ui, sans-serif;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-nunito), system-ui, sans-serif;
+  font-family: ui-sans-serif, system-ui, sans-serif;
 }
 
-@keyframes blob {
+.member-site {
+  font-family: var(--font-nunito), ui-sans-serif, system-ui, sans-serif;
+}
+
+.home-stage {
+  --spot-x: 50%;
+  --spot-y: 8%;
+  --parallax-x: 0px;
+  --parallax-y: 0px;
+}
+
+.home-parallax {
+  transform: translate3d(var(--parallax-x), var(--parallax-y), 0);
+}
+
+.home-scrim {
+  background:
+    linear-gradient(
+      180deg,
+      rgba(5, 8, 12, 0.84) 0%,
+      rgba(5, 8, 12, 0.62) 16%,
+      rgba(5, 8, 12, 0.38) 40%,
+      rgba(5, 8, 12, 0.5) 68%,
+      rgba(5, 8, 12, 0.82) 100%
+    );
+}
+
+.home-vignette {
+  background: radial-gradient(
+    ellipse at 50% 46%,
+    rgba(5, 8, 12, 0.05) 0%,
+    rgba(5, 8, 12, 0.28) 48%,
+    rgba(5, 8, 12, 0.72) 100%
+  );
+}
+
+.home-spotlight {
+  background: radial-gradient(
+    38rem circle at var(--spot-x) var(--spot-y),
+    rgba(255, 236, 206, 0.16),
+    transparent 62%
+  );
+  mix-blend-mode: soft-light;
+}
+
+.home-title {
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.55);
+}
+
+@layer components {
+  .glass-tile {
+    background: linear-gradient(
+      180deg,
+      rgba(8, 12, 18, 0.84),
+      rgba(8, 12, 18, 0.76)
+    );
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.16),
+      0 18px 50px rgba(0, 0, 0, 0.32);
+    backdrop-filter: blur(22px) saturate(1.2);
+    -webkit-backdrop-filter: blur(22px) saturate(1.2);
+    transition:
+      border-color 180ms ease,
+      box-shadow 180ms ease;
+  }
+
+  .glass-tile:hover {
+    border-color: rgba(255, 255, 255, 0.32);
+  }
+}
+
+@keyframes kenburns {
+  from {
+    transform: scale(1) translate3d(0, 0, 0);
+  }
+  to {
+    transform: scale(1.07) translate3d(-1.4%, -1%, 0);
+  }
+}
+
+.ken-burns {
+  animation: kenburns 52s ease-in-out infinite alternate;
+}
+
+@keyframes live-pulse {
   0%,
   100% {
-    transform: translate(0, 0) scale(1);
+    opacity: 1;
   }
-  33% {
-    transform: translate(30px, -40px) scale(1.05);
-  }
-  66% {
-    transform: translate(-20px, 20px) scale(0.95);
+  50% {
+    opacity: 0.45;
   }
 }
 
-.animate-blob {
-  animation: blob 8s ease-in-out infinite;
+.live-dot {
+  animation: live-pulse 2.4s ease-in-out infinite;
 }
 
-.animation-delay-2000 {
-  animation-delay: 2s;
-}
+@media (prefers-reduced-motion: reduce) {
+  .ken-burns,
+  .live-dot {
+    animation: none;
+  }
 
-.animation-delay-4000 {
-  animation-delay: 4s;
+  .home-parallax {
+    transform: none;
+  }
 }
