@@ -156,7 +156,7 @@ export function GamesTile({
 
   return (
     <a
-      href={gamesHomeUrl}
+      href={newestHref}
       data-tilt
       className={`${tileLink} relative flex min-h-[250px] flex-col overflow-hidden p-6 sm:p-7 lg:col-span-5`}
     >

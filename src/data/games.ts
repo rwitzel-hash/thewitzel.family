@@ -9,11 +9,11 @@ export const gamesHomeUrl = "https://games.thewitzel.family";
 /**
  * The game the home tile calls newest.
  * This entry is the source of truth — do not infer it from catalog order.
- * Point it at the next title (Maple Hollow is expected soon) when that game ships.
+ * Path matches the live catalog: https://games.thewitzel.family/games/maple-hollow
  */
 export const featuredGame: FamilyGame = {
-  name: "Family Hold'em",
-  href: `${gamesHomeUrl}/games/poker`,
+  name: "Maple Hollow",
+  href: `${gamesHomeUrl}/games/maple-hollow`,
   blurb:
-    "No-Limit Texas Hold'em with pretend chips — read the board, name your hand, and play the table.",
+    "A 3D town — create a character, claim and decorate a house, drive cars and emergency vehicles, and work jobs for coins.",
 };
