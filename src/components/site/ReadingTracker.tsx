@@ -52,9 +52,12 @@ export function ReadingTracker({
   const [date, setDate] = useState(denverDateKey());
 
   useEffect(() => {
+    // Saved minutes live in localStorage, so they can only be read after mount.
+    /* eslint-disable react-hooks/set-state-in-effect */
     setSessions(loadSessions(slug));
     setDate(denverDateKey());
     setReady(true);
+    /* eslint-enable react-hooks/set-state-in-effect */
   }, [slug]);
 
   useEffect(() => {

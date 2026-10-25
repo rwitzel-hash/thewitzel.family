@@ -1,75 +1,102 @@
-import { ProjectCard } from "@/components/ProjectCard";
-import { projects } from "@/data/projects";
+import { Geist } from "next/font/google";
+import { BridgeBackground } from "@/components/home/BridgeBackground";
+import { ClockTile } from "@/components/home/ClockTile";
+import {
+  GamesTile,
+  PersonTile,
+  RideTile,
+  SoonTile,
+  WeatherTile,
+} from "@/components/home/DashboardTiles";
+import { HomeStage } from "@/components/home/HomeStage";
+import { projects, type Project } from "@/data/projects";
+import { getHomeData } from "@/lib/home";
 
-export default function Home() {
+const geist = Geist({
+  subsets: ["latin"],
+  display: "swap",
+});
+
+export const revalidate = 1800;
+
+const memberOrder = ["Paul", "Vee", "Gabby", "Heidi"];
+
+function byMemberOrder(a: Project, b: Project): number {
+  const ai = memberOrder.indexOf(a.name);
+  const bi = memberOrder.indexOf(b.name);
+  return (ai === -1 ? 99 : ai) - (bi === -1 ? 99 : bi);
+}
+
+export default async function Home() {
+  const data = await getHomeData();
+  const ride =
+    projects.find((project) => project.name === "Ride") ?? projects[0];
+  const rest = projects.filter((project) => project.name !== "Ride");
+  const members = rest
+    .filter((project) => !project.comingSoon)
+    .sort(byMemberOrder);
+  const comingSoon = rest.filter((project) => project.comingSoon);
+
   return (
-    <div className="relative min-h-full overflow-hidden">
-      <div className="pointer-events-none absolute inset-0 bg-[#0f0c29]" />
-      <div className="pointer-events-none absolute -left-32 top-0 h-[500px] w-[500px] animate-blob rounded-full bg-purple-600/40 blur-3xl" />
-      <div className="pointer-events-none absolute -right-32 top-1/4 h-[450px] w-[450px] animate-blob animation-delay-2000 rounded-full bg-pink-500/35 blur-3xl" />
-      <div className="pointer-events-none absolute bottom-0 left-1/3 h-[400px] w-[400px] animate-blob animation-delay-4000 rounded-full bg-cyan-500/30 blur-3xl" />
-
-      <div className="pointer-events-none absolute inset-0 opacity-20">
-        <svg className="h-full w-full" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <pattern
-              id="dots"
-              x="0"
-              y="0"
-              width="32"
-              height="32"
-              patternUnits="userSpaceOnUse"
-            >
-              <circle cx="2" cy="2" r="1" fill="white" />
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#dots)" />
-        </svg>
-      </div>
-
-      <main className="relative mx-auto max-w-6xl px-6 py-16 sm:px-8 sm:py-24">
-        <header className="mb-16 text-center">
-          <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-1.5 text-sm font-medium text-white/80 backdrop-blur-sm">
-            <span aria-hidden="true">🏡</span>
-            Welcome home
-          </p>
-          <h1 className="font-display text-5xl font-extrabold tracking-tight text-white sm:text-7xl">
-            The Witzel
-            <span className="block bg-gradient-to-r from-pink-300 via-violet-300 to-cyan-300 bg-clip-text text-transparent">
-              Family
-            </span>
-          </h1>
-          <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-white/70 sm:text-xl">
-            Our little corner of the internet — projects, passions, and
-            adventures. Pick a door and step inside.
+    <HomeStage className={geist.className}>
+      <BridgeBackground />
+      <main className="relative z-10 mx-auto w-full max-w-[1500px] px-4 py-6 sm:px-6 sm:py-10 lg:px-10 xl:max-w-[1680px] 2xl:max-w-[1840px] 2xl:py-14">
+        <header className="relative mb-6 flex items-start justify-between gap-4 sm:mb-8">
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute -inset-x-3 -top-3 bottom-0 -z-10 rounded-[28px] bg-gradient-to-r from-black/70 via-black/45 to-transparent"
+          />
+          <div>
+            <h1 className="home-title text-[clamp(2.5rem,6vw,5.4rem)] font-semibold leading-[0.92] tracking-[-0.045em] text-white">
+              The Witzel Family
+            </h1>
+            <p className="home-title mt-3 text-xs font-medium uppercase tracking-[0.28em] text-white/80 sm:text-sm">
+              Live. Together. Always.
+            </p>
+          </div>
+          <p className="mt-1 inline-flex shrink-0 items-center gap-2 rounded-full border border-white/20 bg-black/55 px-3.5 py-1.5 text-sm font-medium text-white shadow-lg backdrop-blur-md">
+            <span className="live-dot size-2 rounded-full bg-emerald-400 shadow-[0_0_12px_rgba(52,211,153,0.9)]" />
+            Live
           </p>
         </header>
 
-        <section aria-label="Family projects">
-          <div className="mb-8 flex items-end justify-between gap-4">
-            <div>
-              <h2 className="text-2xl font-bold text-white">Explore</h2>
-              <p className="mt-1 text-white/60">
-                Family spaces — more opening soon!
-              </p>
-            </div>
-            <div className="hidden h-px flex-1 bg-gradient-to-r from-white/20 to-transparent sm:block" />
+        <section aria-label="Family dashboard" className="grid grid-cols-1 gap-3 lg:grid-cols-12 lg:gap-4">
+          {ride ? <RideTile project={ride} /> : null}
+          <GamesTile
+            total={data.games.total}
+            newestName={data.games.newestName}
+            newestBlurb={data.games.newestBlurb}
+            newestHref={data.games.newestHref}
+            live={data.games.live}
+          />
+          <div className="grid grid-cols-2 gap-3 lg:col-span-5 lg:gap-4">
+            <WeatherTile weather={data.weather} />
+            <ClockTile />
           </div>
+        </section>
 
-          <ul className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {projects.map((project) => (
+        <ul className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:mt-4 lg:grid-cols-4 lg:gap-4">
+          {members.map((project) => (
+            <li key={project.name} className="list-none">
+              <PersonTile project={project} note={data.notes[project.name]} />
+            </li>
+          ))}
+        </ul>
+
+        {comingSoon.length > 0 ? (
+          <ul className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-3 lg:mt-4 lg:gap-4">
+            {comingSoon.map((project) => (
               <li key={project.name} className="list-none">
-                <ProjectCard project={project} />
+                <SoonTile project={project} />
               </li>
             ))}
           </ul>
-        </section>
+        ) : null}
 
-        <footer className="mt-20 text-center text-sm text-white/40">
-          <p>Made with love by the Witzel family</p>
-          <p className="mt-1">thewitzel.family</p>
+        <footer className="home-title mt-10 text-center text-xs tracking-[0.18em] text-white/70 uppercase">
+          thewitzel.family
         </footer>
       </main>
-    </div>
+    </HomeStage>
   );
 }

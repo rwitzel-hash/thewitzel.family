@@ -71,7 +71,12 @@ function sortAndCap(items: RankedEvent[], limit: number): EventItem[] {
   return items
     .sort((a, b) => a.startMs - b.startMs)
     .slice(0, limit)
-    .map(({ startMs: _startMs, ...item }) => item);
+    .map(({ title, subtitle, badge, href }) => ({
+      title,
+      subtitle,
+      badge,
+      href,
+    }));
 }
 
 export async function getTrumbaEvents(

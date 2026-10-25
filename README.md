@@ -1,6 +1,6 @@
 # The Witzel Family
 
-A fun landing page for [thewitzel.family](https://thewitzel.family) — the family's home on the web.
+The family home for [thewitzel.family](https://thewitzel.family). The apex page is a live bento dashboard over a painting of the Bear Canyon Suspension Bridge. Weather is Open-Meteo for Draper. The games tile reads the public catalog on [games.thewitzel.family](https://games.thewitzel.family) and features the last listed title, with a short fallback shelf in `src/data/games.ts`. Ride Wall sits behind Cloudflare Access and does not expose a keyless feed, so the Ride tile links through without live mileage.
 
 ## Projects
 
